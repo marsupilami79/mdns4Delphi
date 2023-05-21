@@ -1,0 +1,46 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 566
+  ClientWidth = 380
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  DesignerMasterStyle = 3
+  object ServicesLV: TListView
+    ItemAppearanceClassName = 'TImageListItemBottomDetailAppearance'
+    ItemEditAppearanceClassName = 'TImageListItemBottomDetailShowCheckAppearance'
+    HeaderAppearanceClassName = 'TListHeaderObjects'
+    FooterAppearanceClassName = 'TListHeaderObjects'
+    Anchors = [akLeft, akTop, akRight, akBottom]
+    Position.X = 8.000000000000000000
+    Position.Y = 39.000000000000000000
+    Size.Width = 364.000000000000000000
+    Size.Height = 467.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    OnChangeRepainted = ServicesLVChangeRepainted
+  end
+  object Button1: TButton
+    Anchors = [akLeft, akBottom]
+    Position.X = 8.000000000000000000
+    Position.Y = 514.000000000000000000
+    Size.Width = 105.000000000000000000
+    Size.Height = 44.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    Text = 'Button1'
+    OnClick = Button1Click
+  end
+  object ServiceNameLbl: TLabel
+    Position.X = 8.000000000000000000
+    Position.Y = 8.000000000000000000
+    Size.Width = 364.000000000000000000
+    Size.Height = 23.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'ServiceNameLbl'
+    TabOrder = 2
+  end
+end
