@@ -41,7 +41,7 @@ type
     TXT: TmdnsTxtRecord;
     Host: String;
     Port: Word;
-    Resolved: Boolean;
+    isError: Boolean;
     Errorcode: Integer;
   end;
 

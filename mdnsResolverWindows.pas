@@ -9,7 +9,8 @@ unit mdnsResolverWindows;
 interface
 
 uses
-  Classes, SysUtils, windns, mdnsCore, SyncObjs, Generics.Collections;
+  Classes, SysUtils, windns, mdnsCore, SyncObjs, Generics.Collections
+  {$IFDEF FPC}, Forms{$ENDIF};
 
 type
   TMdnsResolver = class(TComponent)
@@ -23,7 +24,7 @@ type
       FErrorQueue: TList<DWORD>;
       FErrorLock: TCriticalSection;
       FResultLock: TCriticalSection;
-      procedure ProcessResults;
+      procedure ProcessResults{$IFDEF FPC}(Data: PtrInt){$ENDIF};
       procedure ProcessResult(pDnsRecord: PDNS_RECORDW);
       procedure ProcessError(Status: DWORD);
       function GetServiceType: String;
@@ -91,9 +92,9 @@ constructor TMdnsResolver.Create(AOwner: TComponent);
 begin
   inherited;
   FResultQueue := TList<PDNS_RECORDW>.Create;
-  FResultLock := TCriticalSection.Create;
+  FResultLock := SyncObjs.TCriticalSection.Create;
   FErrorQueue := TList<DWORD>.Create;
-  FErrorLock := TCriticalSection.Create;
+  FErrorLock := SyncObjs.TCriticalSection.Create;
 end;
 
 destructor TMdnsResolver.Destroy;
@@ -124,6 +125,7 @@ begin
   FRequest.pQueryContext := self;
   FRequest.Callback := CallBack;
 
+  FCancel.reserved := nil;
   Status := DnsServiceBrowse(@FRequest, @FCancel);
   if Status <> DNS_REQUEST_PENDING then
     raise mdnsException.Create('DNS error ' + IntToStr(Status));
@@ -179,6 +181,7 @@ begin
   end;
 
   Result.Errorcode := 0;
+  Result.isError := False;
   if Result.A.Name <> '' then
     Host := Result.A.IpAddress
   else if Result.AAAA.Name <> '' then
@@ -203,14 +206,18 @@ var
 begin
   Result.PTR.Name := GetServiceType;
   Result.Errorcode := Status;
-  Result.Resolved := False;
+  Result.isError := True;
   if Assigned(FOnResolved) then
     FOnResolved(Self, Result);
 end;
 
 procedure TMdnsResolver.StopResolve;
+var
+  ErrorCode: TDNS_STATUS;
 begin
-  raise mdnsException.Create('StopResolve is not implemented yet.');
+  ErrorCode := DnsServiceBrowseCancel(@FCancel);
+  if ErrorCode <> ERROR_SUCCESS then
+    RaiseLastOSError;
 end;
 
 procedure TMdnsResolver.AddResult(Result: PDNS_RECORDW);
@@ -221,7 +228,11 @@ begin
   finally
     FResultLock.Leave;
   end;
-  TThread.ForceQueue(nil, ProcessResults, 250);
+  {$IFDEF FPC}
+  Application.QueueAsyncCall(ProcessResults, 0);
+  {$ELSE}
+  TThread.ForceQueue(nil, ProcessResults{$IFNDEF FPC}, 250{$ENDIF});
+  {$ENDIF}
 end;
 
 procedure TMdnsResolver.AddError(Error: DWORD);
@@ -232,10 +243,14 @@ begin
   finally
     FErrorLock.Leave;
   end;
+  {$IFDEF FPC}
+  Application.QueueAsyncCall(ProcessResults, 0);
+  {$ELSE}
   TThread.ForceQueue(nil, ProcessResults);
+  {$ENDIF}
 end;
 
-procedure TMdnsResolver.ProcessResults;
+procedure TMdnsResolver.ProcessResults{$IFDEF FPC}(Data: PtrInt){$ENDIF};
 var
   continueProcessing: Boolean;
   mdnsResult: PDNS_RECORDW;

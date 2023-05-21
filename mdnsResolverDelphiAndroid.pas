@@ -37,7 +37,7 @@ type
 
 implementation
 
-uses Androidapi.JNI.JavaTypes, Androidapi.JNIBridge, Androidapi.Helpers, Androidapi.JNI.GraphicsContentViewText, SysUtils, Androidapi.JNI.Java.Net, Unit1;
+uses Androidapi.JNI.JavaTypes, Androidapi.JNIBridge, Androidapi.Helpers, Androidapi.JNI.GraphicsContentViewText, SysUtils, Androidapi.JNI.Java.Net;
 
 const
   baseQueryName = '_services._dns-sd._udp';
@@ -100,21 +100,23 @@ begin
   ServiceType := FServiceType;
   if ServiceType[Length(Servicetype)] = '.' then
     Delete(ServiceType, Length(Servicetype), 1);
+  if ServiceType.EndsWith('.local') then
+    Delete(ServiceType, Length(ServiceType) - 5, 6);
 
 
-  if not Assigned(FNsdManager) then
+  if not Assigned(FNsdManager) then begin
     Obj := TAndroidHelper.Context.getSystemService(TJContext.JavaClass.NSD_SERVICE);
-  if Assigned(Obj) then begin
-    FNsdManager := TJNsdManager.Wrap((Obj as ILocalObject).GetObjectID);
-    if not Assigned(FNsdManager) then
-      raise mdnsException.Create('Could not get an NsdManager interface.');
-
-    FDiscoveryListener := TDiscoveryListener.Create(self) as JNsdManager_DiscoveryListener;
-    //FDiscoveryListener := Unit1.TDiscoveryListener.Create as JNsdManager_DiscoveryListener;
-    FNsdManager.discoverServices(StringToJString(FServiceType), TJNsdManager.JavaClass.PROTOCOL_DNS_SD, FDiscoveryListener);
-  end else begin
-    raise mdnsException.Create('Obj is empty.');
+    if Assigned(Obj) then begin
+      FNsdManager := TJNsdManager.Wrap((Obj as ILocalObject).GetObjectID);
+      if not Assigned(FNsdManager) then
+        raise mdnsException.Create('Could not get an NsdManager interface.');
+    end else
+      raise mdnsException.Create('Obj is empty.');
   end;
+
+  FDiscoveryListener := TDiscoveryListener.Create(self) as JNsdManager_DiscoveryListener;
+  //FDiscoveryListener := Unit1.TDiscoveryListener.Create as JNsdManager_DiscoveryListener;
+  FNsdManager.discoverServices(StringToJString(ServiceType), TJNsdManager.JavaClass.PROTOCOL_DNS_SD, FDiscoveryListener);
   ResultTimer.Enabled := True;
 end;
 
@@ -217,11 +219,14 @@ begin
   if FServiceType = baseQueryName then begin
     ResultRec.PTR.Name := baseQueryName;
     ResultRec.PTR.NameHost := JStringToString(ServiceInfo.getServiceName) + '.' + JStringToString(ServiceInfo.getServiceType);
+    ResultRec.Errorcode := 0;
+    ResultRec.isError := False;
   end else begin
     ResultRec.PTR.Name := JStringToString(ServiceInfo.getServiceType);
     ResultRec.PTR.NameHost := JStringToString(ServiceInfo.getServiceName);
+    ResultRec.Errorcode := ErrorCode;
+    ResultRec.isError := True;
   end;
-  ResultRec.Errorcode := ErrorCode;
 
   AddResult(ResultRec);
 end;

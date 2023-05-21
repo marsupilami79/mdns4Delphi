@@ -191,6 +191,7 @@ type
 
   TDnsServiceBrowse = function(pRequest: PDNS_SERVICE_BROWSE_REQUEST; pCancel: PDNS_SERVICE_CANCEL): TDNS_STATUS; winapi;
   TDnsRecordListFree = procedure(var p: PDNS_RECORDW; t: NativeUInt); winapi;
+  TDnsServiceBrowseCancel = function(pCancelHandle: PDNS_SERVICE_CANCEL): TDNS_STATUS; winapi;
 
 const
   {DNS error codes are defined in winerror.h}
@@ -347,12 +348,12 @@ const
   DnsFreeRecordList = 1;
   DnsFreeParsedMessageFields = 2;
 
-
 procedure InitWindns;
 
 var
   DnsServiceBrowse: TDnsServiceBrowse;
   DnsRecordListFree: TDnsRecordListFree;
+  DnsServiceBrowseCancel: TDnsServiceBrowseCancel;
 
 implementation
 
@@ -377,6 +378,7 @@ begin
 
     DnsServiceBrowse := TDnsServiceBrowse(GetSymbol('DnsServiceBrowse'));
     DnsRecordListFree := TDnsRecordListFree(GetSymbol('DnsRecordListFree'));
+    DnsServiceBrowseCancel := TDnsServiceBrowseCancel(GetSymbol('DnsServiceBrowseCancel'));
   end;
 end;
 
