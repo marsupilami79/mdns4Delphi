@@ -189,9 +189,55 @@ type
   end;
   PDNS_SERVICE_BROWSE_REQUEST = ^TDNS_SERVICE_BROWSE_REQUEST;
 
+  TDNS_SERVICE_INSTANCE = packed record
+    pszInstanceName: PWideChar;
+    pszHostName: PWideChar;
+    ip4Address: PIP4_ADDRESS;
+    ip6Address: PIP6_ADDRESS;
+    wPort: WORD;
+    wPriority: WORD;
+    wWeight: WORD;
+    dwPropertyCount: DWORD;
+    Keys: PPWideChar;
+    Values: PPWideChar;
+    dwInterfaceIndex: DWORD;
+  end;
+  PDNS_SERVICE_INSTANCE = ^TDNS_SERVICE_INSTANCE;
+
+  TDNS_SERVICE_REGISTER_COMPLETE = procedure(
+    Status: DWORD;
+    pQueryContext: Pointer;
+    pInstance: PDNS_SERVICE_INSTANCE
+  );
+  PDNS_SERVICE_REGISTER_COMPLETE = ^TDNS_SERVICE_REGISTER_COMPLETE;
+
+  TDNS_SERVICE_REGISTER_REQUEST = packed record
+    Version: culong;
+    InterfaceIndex: culong;
+    pServiceInstance: PDNS_SERVICE_INSTANCE;
+    pRegisterCompletionCallback: PDNS_SERVICE_REGISTER_COMPLETE;
+    pQueryContext: Pointer;
+    hCredentials: THandle;
+    unicastEnabled: LongBool;
+  end;
+  PDNS_SERVICE_REGISTER_REQUEST = ^TDNS_SERVICE_REGISTER_REQUEST;
+
   TDnsServiceBrowse = function(pRequest: PDNS_SERVICE_BROWSE_REQUEST; pCancel: PDNS_SERVICE_CANCEL): TDNS_STATUS; winapi;
   TDnsRecordListFree = procedure(var p: PDNS_RECORDW; t: NativeUInt); winapi;
   TDnsServiceBrowseCancel = function(pCancelHandle: PDNS_SERVICE_CANCEL): TDNS_STATUS; winapi;
+  TDnsServiceRegister = function(pRequest: PDNS_SERVICE_REGISTER_REQUEST; pCancel: PDNS_SERVICE_CANCEL): DWORD; winapi;
+  TDnsServiceConstructInstance = function(
+    pServiceName: PWideChar;
+    pHostName :PWideChar;
+    pIp4: PIP4_ADDRESS;
+    pIp6: PIP6_ADDRESS;
+    wPort: WORD;
+    wPriority: WORD;
+    wWeight: WORD;
+    dwPropertiesCount: DWORD;
+    keys: PPWideChar;
+    values: PPWideChar
+  ): PDNS_SERVICE_INSTANCE; winapi;
 
 const
   {DNS error codes are defined in winerror.h}
@@ -354,6 +400,8 @@ var
   DnsServiceBrowse: TDnsServiceBrowse;
   DnsRecordListFree: TDnsRecordListFree;
   DnsServiceBrowseCancel: TDnsServiceBrowseCancel;
+  DnsServiceRegister: TDnsServiceRegister;
+  DnsServiceConstructInstance: TDnsServiceConstructInstance;
 
 implementation
 
@@ -364,7 +412,7 @@ var
 
 function GetSymbol(Name: String): Pointer;
 begin
-  Result := GetProcAddress(Lib, 'DnsServiceBrowse');
+  Result := GetProcAddress(Lib, PWideChar(Name));
   if not Assigned(Result) then
     raise mdnsException.Create('Could not load symbol ' + Name + ' from dnsapi.dll.');
 end;
@@ -379,6 +427,8 @@ begin
     DnsServiceBrowse := TDnsServiceBrowse(GetSymbol('DnsServiceBrowse'));
     DnsRecordListFree := TDnsRecordListFree(GetSymbol('DnsRecordListFree'));
     DnsServiceBrowseCancel := TDnsServiceBrowseCancel(GetSymbol('DnsServiceBrowseCancel'));
+    DnsServiceRegister := TDnsServiceRegister(GetSymbol('DnsServiceRegister'));
+    DnsServiceConstructInstance := TDnsServiceConstructInstance(GetSymbol('DnsServiceConstructInstance'));
   end;
 end;
 
