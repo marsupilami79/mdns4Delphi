@@ -25,7 +25,7 @@ type
       FErrorLock: TCriticalSection;
       FResultLock: TCriticalSection;
       procedure ProcessResults{$IFDEF FPC}(Data: PtrInt){$ENDIF};
-      procedure ProcessResult(pDnsRecord: PDNS_RECORDW);
+      procedure ProcessResult(const pDnsRecord: PDNS_RECORDW);
       procedure ProcessError(Status: DWORD);
       function GetServiceType: String;
       procedure SetServiceType(NewType: String);
@@ -141,7 +141,7 @@ begin
   FServiceType := UnicodeString(NewType);
 end;
 
-procedure TMdnsResolver.ProcessResult(pDnsRecord: PDNS_RECORDW);
+procedure TMdnsResolver.ProcessResult(const pDnsRecord: PDNS_RECORDW);
 var
   Result: TmdnsResult;
   x: Integer;

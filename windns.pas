@@ -223,9 +223,11 @@ type
   PDNS_SERVICE_REGISTER_REQUEST = ^TDNS_SERVICE_REGISTER_REQUEST;
 
   TDnsServiceBrowse = function(pRequest: PDNS_SERVICE_BROWSE_REQUEST; pCancel: PDNS_SERVICE_CANCEL): TDNS_STATUS; winapi;
-  TDnsRecordListFree = procedure(var p: PDNS_RECORDW; t: NativeUInt); winapi;
+  TDnsRecordListFree = procedure(p: PDNS_RECORDW; t: NativeUInt); winapi;
   TDnsServiceBrowseCancel = function(pCancelHandle: PDNS_SERVICE_CANCEL): TDNS_STATUS; winapi;
   TDnsServiceRegister = function(pRequest: PDNS_SERVICE_REGISTER_REQUEST; pCancel: PDNS_SERVICE_CANCEL): DWORD; winapi;
+  TDnsServiceDeRegister = function(pRequest: PDNS_SERVICE_REGISTER_REQUEST; pCancel: PDNS_SERVICE_CANCEL): DWORD; winapi;
+  TDnsServiceRegisterCancel = function (pCancelHandle: PDNS_SERVICE_CANCEL): DWORD; winapi;
   TDnsServiceConstructInstance = function(
     pServiceName: PWideChar;
     pHostName :PWideChar;
@@ -401,6 +403,8 @@ var
   DnsRecordListFree: TDnsRecordListFree;
   DnsServiceBrowseCancel: TDnsServiceBrowseCancel;
   DnsServiceRegister: TDnsServiceRegister;
+  DnsServiceRegisterCancel: TDnsServiceRegisterCancel;
+  DnsServiceDeRegister: TDnsServiceDeRegister;
   DnsServiceConstructInstance: TDnsServiceConstructInstance;
 
 implementation
@@ -409,12 +413,17 @@ uses mdnsCore{$IFNDEF FPC}{$IF DEFINED(WIN32) OR DEFINED(WIN64)}, Windows{$IFEND
 
 var
   Lib: NativeUInt;
+  LibName: String;
 
 function GetSymbol(Name: String): Pointer;
 begin
+  {$IFNDEF FPC}
   Result := GetProcAddress(Lib, PWideChar(Name));
+  {$ELSE}
+  Result := GetProcAddress(Lib, Name);
+  {$ENDIF}
   if not Assigned(Result) then
-    raise mdnsException.Create('Could not load symbol ' + Name + ' from dnsapi.dll.');
+    raise mdnsException.Create('Could not load symbol ' + Name + ' from ' + LibName + '.');
 end;
 
 procedure InitWindns;
@@ -424,10 +433,14 @@ begin
     if Lib = 0 then
       RaiseLastOSError;
 
+    Libname := GetModuleName(Lib);
+
     DnsServiceBrowse := TDnsServiceBrowse(GetSymbol('DnsServiceBrowse'));
     DnsRecordListFree := TDnsRecordListFree(GetSymbol('DnsRecordListFree'));
     DnsServiceBrowseCancel := TDnsServiceBrowseCancel(GetSymbol('DnsServiceBrowseCancel'));
     DnsServiceRegister := TDnsServiceRegister(GetSymbol('DnsServiceRegister'));
+    DnsServiceRegisterCancel := TDnsServiceRegisterCancel(GetSymbol('DnsServiceRegisterCancel'));
+    DnsServiceDeRegister := TDnsServiceDeRegister(GetSymbol('DnsServiceDeRegister'));
     DnsServiceConstructInstance := TDnsServiceConstructInstance(GetSymbol('DnsServiceConstructInstance'));
   end;
 end;
