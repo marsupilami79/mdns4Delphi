@@ -1,5 +1,12 @@
 # mdns4Delphi
-This project implements helper objects for for doing DNS-SD in Delphi and Lazarus / Free Pascal applications.
+This project implements helper objects for doing DNS-SD in Delphi and Lazarus / Free Pascal applications.
+This should help developers to more easily create applications that can find counter parts in the local network (and maybe enable them to provide features that are similar to cloud features).
+
+On Windows services can be found and registered.
+On Android services can be found only.
+
+The Delphi-FMX-Browser directory contains an example on how to do service discovery.
+
 
 ## Service Discovery
 
