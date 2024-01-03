@@ -11,6 +11,7 @@ type
   TMdnsResolver = class(TComponent)
     protected
       FServiceType: String;
+      FSearchService: String;
       FOnResolved: TmdnsResolveEvent;
       FNsdManager: JNsdManager;
       ResolveQueue: TList<JNsdServiceInfo>;
@@ -95,13 +96,14 @@ end;
 procedure TMdnsResolver.StartResolve;
 var
   Obj: JObject;
-  ServiceType: String;
 begin
-  ServiceType := FServiceType;
-  if ServiceType[Length(Servicetype)] = '.' then
-    Delete(ServiceType, Length(Servicetype), 1);
-  if ServiceType.EndsWith('.local') then
-    Delete(ServiceType, Length(ServiceType) - 5, 6);
+  FSearchService := FServiceType;
+  if FSearchService.EndsWith('.local.') then
+    Delete(FSearchService, Length(FSearchService) - 6, 7)
+  else if FSearchService[Length(FSearchService)] = '.' then
+    Delete(FSearchService, Length(FSearchService), 1)
+  else if FSearchService.EndsWith('.local') then
+    Delete(FSearchService, Length(FSearchService) - 5, 6);
 
 
   if not Assigned(FNsdManager) then begin
@@ -116,7 +118,7 @@ begin
 
   FDiscoveryListener := TDiscoveryListener.Create(self) as JNsdManager_DiscoveryListener;
   //FDiscoveryListener := Unit1.TDiscoveryListener.Create as JNsdManager_DiscoveryListener;
-  FNsdManager.discoverServices(StringToJString(ServiceType), TJNsdManager.JavaClass.PROTOCOL_DNS_SD, FDiscoveryListener);
+  FNsdManager.discoverServices(StringToJString(FSearchService), TJNsdManager.JavaClass.PROTOCOL_DNS_SD, FDiscoveryListener);
   ResultTimer.Enabled := True;
 end;
 
@@ -173,7 +175,7 @@ var
   ResultRec: TmdnsResult;
   Host: JInetAddress;
 begin
-  if FServiceType = baseQueryName then begin
+  if FSearchService = baseQueryName then begin
     ResultRec.PTR.Name := baseQueryName;
     ResultRec.PTR.NameHost := JStringToString(ServiceInfo.getServiceName) + '.' + JStringToString(ServiceInfo.getServiceType);
   end else begin
@@ -216,7 +218,7 @@ var
 begin
   ResolveNext;
 
-  if FServiceType = baseQueryName then begin
+  if FSearchService = baseQueryName then begin
     ResultRec.PTR.Name := baseQueryName;
     ResultRec.PTR.NameHost := JStringToString(ServiceInfo.getServiceName) + '.' + JStringToString(ServiceInfo.getServiceType);
     ResultRec.Errorcode := 0;

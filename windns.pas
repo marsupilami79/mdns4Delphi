@@ -445,4 +445,7 @@ begin
   end;
 end;
 
+initialization
+  InitWindns;
+
 end.

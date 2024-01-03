@@ -16,6 +16,7 @@ type
   TMdnsResolver = class(TComponent)
     protected
       FServiceType: UnicodeString;
+      FSearchService: UnicodeString;
       FOnResolved: TmdnsResolveEvent;
       FRequest: TDNS_SERVICE_BROWSE_REQUEST;
       FCancel: TDNS_SERVICE_CANCEL;
@@ -119,9 +120,18 @@ begin
   InitWindns;
   CallBack.pBrowseCallback := @dnsbrowsecallback;
 
+  FSearchService := FServiceType;
+
+  if Copy(FSearchService, Length(FSearchService) - 6, 7) = '.local.' then
+    Delete(FSearchService, Length(FSearchService), 1)
+  else if FSearchService[Length(FSearchService)] = '.' then
+    FSearchService := FSearchService + 'local'
+  else if Copy(FSearchService, Length(FSearchService) - 5, 6) <> '.local' then
+    FSearchService := FSearchService + '.local';
+
   FRequest.Version := 1;
   FRequest.InterfaceIndex := 0;
-  FRequest.QueryName := @FServiceType[1];
+  FRequest.QueryName := @FSearchService[1];
   FRequest.pQueryContext := self;
   FRequest.Callback := CallBack;
 
@@ -215,9 +225,11 @@ procedure TMdnsResolver.StopResolve;
 var
   ErrorCode: TDNS_STATUS;
 begin
-  ErrorCode := DnsServiceBrowseCancel(@FCancel);
-  if ErrorCode <> ERROR_SUCCESS then
-    RaiseLastOSError;
+  if FCancel.reserved <> nil then begin
+    ErrorCode := DnsServiceBrowseCancel(@FCancel);
+    if ErrorCode <> ERROR_SUCCESS then
+      RaiseLastOSError;
+  end;
 end;
 
 procedure TMdnsResolver.AddResult(Result: PDNS_RECORDW);
