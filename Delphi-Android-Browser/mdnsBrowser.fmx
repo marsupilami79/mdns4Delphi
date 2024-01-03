@@ -2,7 +2,7 @@ object Form1: TForm1
   Left = 0
   Top = 0
   Caption = 'Form1'
-  ClientHeight = 566
+  ClientHeight = 568
   ClientWidth = 380
   FormFactor.Width = 320
   FormFactor.Height = 480
@@ -18,7 +18,7 @@ object Form1: TForm1
     Position.X = 8.000000000000000000
     Position.Y = 39.000000000000000000
     Size.Width = 364.000000000000000000
-    Size.Height = 467.000000000000000000
+    Size.Height = 427.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 0
     OnChangeRepainted = ServicesLVChangeRepainted
@@ -27,11 +27,12 @@ object Form1: TForm1
     Anchors = [akLeft, akBottom]
     Position.X = 8.000000000000000000
     Position.Y = 514.000000000000000000
-    Size.Width = 105.000000000000000000
+    Size.Width = 176.000000000000000000
     Size.Height = 44.000000000000000000
     Size.PlatformDefault = False
-    TabOrder = 1
-    Text = 'Button1'
+    TabOrder = 2
+    Text = 'browse all types'
+    TextSettings.Trimming = None
     OnClick = Button1Click
   end
   object ServiceNameLbl: TLabel
@@ -40,7 +41,31 @@ object Form1: TForm1
     Size.Width = 364.000000000000000000
     Size.Height = 23.000000000000000000
     Size.PlatformDefault = False
+    TextSettings.Trimming = None
     Text = 'ServiceNameLbl'
-    TabOrder = 2
+    TabOrder = 3
+  end
+  object ServiceTypeEdt: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    Anchors = [akLeft, akRight, akBottom]
+    TabOrder = 4
+    Text = '_https._tcp.local'
+    Position.X = 8.000000000000000000
+    Position.Y = 474.000000000000000000
+    Size.Width = 364.000000000000000000
+    Size.Height = 32.000000000000000000
+    Size.PlatformDefault = False
+  end
+  object Button2: TButton
+    Anchors = [akRight, akBottom]
+    Position.X = 192.000000000000000000
+    Position.Y = 514.000000000000000000
+    Size.Width = 180.000000000000000000
+    Size.Height = 44.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    Text = 'browse edit types'
+    TextSettings.Trimming = None
+    OnClick = Button2Click
   end
 end

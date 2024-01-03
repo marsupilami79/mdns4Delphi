@@ -5,9 +5,8 @@
     </ProjectExtensions>
     <PropertyGroup>
         <DeviceId Condition="'$(Platform)'=='Android'"/>
-        <DeviceId Condition="'$(Platform)'=='Android64'">RZCR100CQ3Z</DeviceId>
+        <DeviceId Condition="'$(Platform)'=='Android64'">28cdf17e35027ece</DeviceId>
     </PropertyGroup>
-    <ItemGroup Condition="'$(Platform)'=='Win64'"/>
     <ItemGroup Condition="'$(Platform)'=='Win32'">
         <DeployFile Include="Win32\Debug\DelphiMdnsBrowser.exe" Condition="'$(Config)'=='Debug'">
             <RemoteDir>DelphiMdnsBrowser\</RemoteDir>
@@ -21,6 +20,15 @@
         </DeployFile>
     </ItemGroup>
     <ItemGroup Condition="'$(Platform)'=='Android64'">
+        <DeployFile Include="$(BDS)\lib\android\debug\armeabi-v7a\libnative-activity.so" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>DelphiMdnsBrowser\library\lib\armeabi-v7a\</RemoteDir>
+            <RemoteName>libDelphiMdnsBrowser.so</RemoteName>
+            <DeployClass>AndroidLibnativeArmeabiv7aFile</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="Android64\Debug\libDelphiMdnsBrowser.so" Condition="'$(Config)'=='Debug'">
             <RemoteDir>DelphiMdnsBrowser\library\lib\arm64-v8a\</RemoteDir>
             <RemoteName>libDelphiMdnsBrowser.so</RemoteName>
@@ -30,15 +38,6 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
             <Required>True</Required>
-        </DeployFile>
-        <DeployFile Include="$(BDS)\lib\android\debug\armeabi-v7a\libnative-activity.so" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>DelphiMdnsBrowser\library\lib\armeabi-v7a\</RemoteDir>
-            <RemoteName>libDelphiMdnsBrowser.so</RemoteName>
-            <DeployClass>AndroidLibnativeArmeabiv7aFile</DeployClass>
-            <Operation>1</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
         </DeployFile>
         <DeployFile Include="$(BDS)\bin\Artwork\Android\FM_NotificationIcon_24x24.png" Condition="'$(Config)'=='Debug'">
             <RemoteDir>DelphiMdnsBrowser\res\drawable-mdpi\</RemoteDir>
@@ -94,15 +93,6 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="$(BDS)\bin\Artwork\Android\FM_LauncherIcon_48x48.png" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>DelphiMdnsBrowser\res\drawable-mdpi\</RemoteDir>
-            <RemoteName>ic_launcher.png</RemoteName>
-            <DeployClass>Android_LauncherIcon48</DeployClass>
-            <Operation>1</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
         <DeployFile Include="$(BDS)\bin\Artwork\Android\FM_LauncherIcon_144x144.png" Condition="'$(Config)'=='Debug'">
             <RemoteDir>DelphiMdnsBrowser\res\drawable-xxhdpi\</RemoteDir>
             <RemoteName>ic_launcher.png</RemoteName>
@@ -121,10 +111,19 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="Android64\Debug\styles.xml" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>DelphiMdnsBrowser\res\values\</RemoteDir>
-            <RemoteName>styles.xml</RemoteName>
-            <DeployClass>AndroidSplashStyles</DeployClass>
+        <DeployFile Include="$(BDS)\bin\Artwork\Android\FM_LauncherIcon_48x48.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>DelphiMdnsBrowser\res\drawable-mdpi\</RemoteDir>
+            <RemoteName>ic_launcher.png</RemoteName>
+            <DeployClass>Android_LauncherIcon48</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Android64\Debug\colors-night-v21.xml" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>DelphiMdnsBrowser\res\values-night-v21\</RemoteDir>
+            <RemoteName>colors.xml</RemoteName>
+            <DeployClass>Android_ColorsDark</DeployClass>
             <Operation>1</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -134,6 +133,15 @@
             <RemoteDir>DelphiMdnsBrowser\res\drawable-xhdpi\</RemoteDir>
             <RemoteName>ic_notification.png</RemoteName>
             <DeployClass>Android_NotificationIcon48</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Android64\Debug\styles.xml" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>DelphiMdnsBrowser\res\values\</RemoteDir>
+            <RemoteName>styles.xml</RemoteName>
+            <DeployClass>AndroidSplashStyles</DeployClass>
             <Operation>1</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -193,15 +201,6 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="Android64\Debug\splash_image_def.xml" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>DelphiMdnsBrowser\res\drawable\</RemoteDir>
-            <RemoteName>splash_image_def.xml</RemoteName>
-            <DeployClass>AndroidSplashImageDef</DeployClass>
-            <Operation>1</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
         <DeployFile Include="$(BDS)\bin\Artwork\Android\FM_NotificationIcon_36x36.png" Condition="'$(Config)'=='Debug'">
             <RemoteDir>DelphiMdnsBrowser\res\drawable-hdpi\</RemoteDir>
             <RemoteName>ic_notification.png</RemoteName>
@@ -224,6 +223,15 @@
             <RemoteDir>DelphiMdnsBrowser\res\drawable-xxxhdpi\</RemoteDir>
             <RemoteName>ic_notification.png</RemoteName>
             <DeployClass>Android_NotificationIcon96</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Android64\Debug\splash_image_def.xml" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>DelphiMdnsBrowser\res\drawable\</RemoteDir>
+            <RemoteName>splash_image_def.xml</RemoteName>
+            <DeployClass>AndroidSplashImageDef</DeployClass>
             <Operation>1</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -258,4 +266,5 @@
         </DeployFile>
     </ItemGroup>
     <ItemGroup Condition="'$(Platform)'=='Android'"/>
+    <ItemGroup Condition="'$(Platform)'=='Win64'"/>
 </Project>
