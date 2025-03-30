@@ -4,7 +4,7 @@ unit mdnsResolver;
 
 {$IF DEFINED(WIN32) OR DEFINED(WIN64)}
 {$I mdnsResolverWindows.pas}
-{$ENDIF}
+{$IFEND}
 {$IFDEF ANDROID}
 {$I mdnsResolverDelphiAndroid.pas}
 {$ENDIF}
