@@ -18,6 +18,10 @@ type
     TLibHandle = Cardinal;
   {$ENDIF}
 
+  {$IF NOT DECLARED(UnicodeString)}
+  UnicodeString = WideString;
+  {$IFEND}
+
   {windns.h}
   TIP4_ADDRESS = record
     case boolean of
@@ -410,7 +414,9 @@ var
 implementation
 
 uses mdnsCore{$IFNDEF FPC}{$IF DEFINED(WIN32) OR DEFINED(WIN64)}, Windows{$IFEND}{$ENDIF};
-
+{$IF CompilerVersion < 19}
+{$R-}
+{$ENDIF}
 var
   Lib: NativeUInt;
   LibName: String;
@@ -418,10 +424,10 @@ var
 function GetSymbol(Name: String): Pointer;
 begin
   {$IFNDEF FPC}
-  Result := GetProcAddress(Lib, PWideChar(Name));
+  Result := GetProcAddress(Lib, PChar(Name));
   {$ELSE}
   Result := GetProcAddress(Lib, Name);
-  {$ENDIF}
+  {$ENDIF NOT FPC}
   if not Assigned(Result) then
     raise mdnsException.Create('Could not load symbol ' + Name + ' from ' + LibName + '.');
 end;

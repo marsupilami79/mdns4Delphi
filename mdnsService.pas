@@ -50,7 +50,7 @@ function GetComputerName: String;
 {$IFDEF WINDOWS}
 var
   Size: DWORD;
-{$IFEND}
+{$ENDIF WINDOWS}
 begin
   {$IFDEF WINDOWS}
   Size := MAX_COMPUTERNAME_LENGTH + 1;
@@ -59,18 +59,22 @@ begin
     SetLength(Result, Size)
   else
     Result := '';
-  {$ELSE}
+  {$ELSE WINDOWS}
   Result := GetHostName;
-  {$IFEND}
+  {$ENDIF WINDOWS}
 end;
 
 procedure DnsServiceRegisterComplete(Status: DWORD; pQueryContext: Pointer; pInstance: PDNS_SERVICE_INSTANCE); winapi;
 begin
-  {$IFDEF FPC}
+{$IFDEF FPC}
   TThread.ForceQueue(nil, TMdnsService(pQueryContext).FinishRegistration);
+{$ELSE FPC}
+  {$IF CompilerVersion < 32}
+  TThread.Queue(nil, TMdnsService(pQueryContext).FinishRegistration);
   {$ELSE}
   TThread.ForceQueue(nil, TMdnsService(pQueryContext).FinishRegistration, 100);
-  {$ENDIF}
+  {$IFEND}
+{$ENDIF FPC}
 end;
 
 procedure TMdnsService.RegisterService;
