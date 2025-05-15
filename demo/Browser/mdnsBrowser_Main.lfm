@@ -1,0 +1,53 @@
+object Form1: TForm1
+  Left = 0
+  Height = 532
+  Top = 0
+  Width = 629
+  Caption = 'Form1'
+  ClientHeight = 532
+  ClientWidth = 629
+  DesignTimePPI = 120
+  LCLVersion = '4.99.0.0'
+  OnCreate = FormCreate
+  object ServicesLV: TListView
+    Left = 10
+    Height = 487
+    Top = 40
+    Width = 400
+    Columns = <>
+    TabOrder = 0
+  end
+  object Button1: TButton
+    Left = 424
+    Height = 55
+    Top = 40
+    Width = 195
+    Caption = 'browse all types'
+    TabOrder = 2
+    OnClick = Button1Click
+  end
+  object ServiceNameLbl: TLabel
+    Left = 10
+    Height = 20
+    Top = 10
+    Width = 107
+    Caption = 'ServiceNameLbl'
+  end
+  object ServiceTypeEdt: TEdit
+    Left = 424
+    Height = 28
+    Top = 168
+    Width = 196
+    TabOrder = 3
+    Text = '_https._tcp.local'
+  end
+  object Button2: TButton
+    Left = 424
+    Height = 55
+    Top = 104
+    Width = 195
+    Caption = 'browse edit types'
+    TabOrder = 1
+    OnClick = Button2Click
+  end
+end
