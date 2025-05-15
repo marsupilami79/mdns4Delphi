@@ -414,9 +414,13 @@ var
 implementation
 
 uses mdnsCore{$IFNDEF FPC}{$IF DEFINED(WIN32) OR DEFINED(WIN64)}, Windows{$IFEND}{$ENDIF};
+
+{$IFNDEF FPC}
 {$IF CompilerVersion < 19}
 {$R-}
 {$ENDIF}
+{$ENDIF}
+
 var
   Lib: NativeUInt;
   LibName: String;

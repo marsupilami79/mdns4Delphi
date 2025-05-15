@@ -1,0 +1,65 @@
+object FormBrowser: TFormBrowser
+  Left = 0
+  Height = 532
+  Top = 0
+  Width = 880
+  Caption = 'mDNS Browser'
+  ClientHeight = 532
+  ClientWidth = 880
+  DesignTimePPI = 120
+  OnCreate = FormCreate
+  object ServicesLV: TListView
+    Left = 0
+    Height = 487
+    Top = 40
+    Width = 584
+    Columns = <    
+      item
+        Caption = 'Name'
+        MinWidth = 250
+        Width = 350
+      end    
+      item
+        Caption = 'IP'
+        MinWidth = 200
+        Width = 200
+      end>
+    TabOrder = 0
+    ViewStyle = vsReport
+  end
+  object Button1: TButton
+    Left = 793
+    Height = 32
+    Top = 40
+    Width = 81
+    Caption = 'get types'
+    TabOrder = 2
+    OnClick = Button1Click
+  end
+  object ServiceNameLbl: TLabel
+    Left = 10
+    Height = 20
+    Top = 10
+    Width = 107
+    Caption = 'ServiceNameLbl'
+  end
+  object Button2: TButton
+    Left = 592
+    Height = 55
+    Top = 72
+    Width = 195
+    Caption = 'Browse'
+    TabOrder = 1
+    OnClick = Button2Click
+  end
+  object ServiceTypeEdt: TComboBox
+    Left = 592
+    Height = 28
+    Top = 40
+    Width = 196
+    ItemHeight = 20
+    Sorted = True
+    TabOrder = 3
+    Text = '_https._tcp.local'
+  end
+end

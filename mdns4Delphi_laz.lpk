@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Package Version="5">
+    <PathDelim Value="\"/>
+    <Name Value="mdns4Delphi_laz"/>
+    <CompilerOptions>
+      <Version Value="11"/>
+      <PathDelim Value="\"/>
+      <SearchPaths>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)\"/>
+      </SearchPaths>
+    </CompilerOptions>
+    <Files>
+      <Item>
+        <Filename Value="mdnsCore.pas"/>
+        <UnitName Value="mdnsCore"/>
+      </Item>
+      <Item>
+        <Filename Value="mdnsResolver.pas"/>
+        <UnitName Value="mdnsResolver"/>
+      </Item>
+      <Item>
+        <Filename Value="mdnsService.pas"/>
+        <UnitName Value="mdnsService"/>
+      </Item>
+      <Item>
+        <Filename Value="windns.pas"/>
+        <UnitName Value="windns"/>
+      </Item>
+    </Files>
+    <RequiredPkgs>
+      <Item>
+        <PackageName Value="LCLBase"/>
+      </Item>
+      <Item>
+        <PackageName Value="FCL"/>
+      </Item>
+    </RequiredPkgs>
+    <UsageOptions>
+      <UnitPath Value="$(PkgOutDir)"/>
+    </UsageOptions>
+    <PublishOptions>
+      <Version Value="2"/>
+      <UseFileFilters Value="True"/>
+    </PublishOptions>
+  </Package>
+</CONFIG>

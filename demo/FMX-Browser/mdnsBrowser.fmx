@@ -1,0 +1,71 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 568
+  ClientWidth = 380
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  DesignerMasterStyle = 3
+  object ServicesLV: TListView
+    ItemAppearanceClassName = 'TImageListItemBottomDetailAppearance'
+    ItemEditAppearanceClassName = 'TImageListItemBottomDetailShowCheckAppearance'
+    HeaderAppearanceClassName = 'TListHeaderObjects'
+    FooterAppearanceClassName = 'TListHeaderObjects'
+    Anchors = [akLeft, akTop, akRight, akBottom]
+    Position.X = 8.000000000000000000
+    Position.Y = 39.000000000000000000
+    Size.Width = 364.000000000000000000
+    Size.Height = 427.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    OnChangeRepainted = ServicesLVChangeRepainted
+  end
+  object Button1: TButton
+    Anchors = [akLeft, akBottom]
+    Position.X = 8.000000000000000000
+    Position.Y = 514.000000000000000000
+    Size.Width = 176.000000000000000000
+    Size.Height = 44.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 2
+    Text = 'browse all types'
+    TextSettings.Trimming = None
+    OnClick = Button1Click
+  end
+  object ServiceNameLbl: TLabel
+    Position.X = 8.000000000000000000
+    Position.Y = 8.000000000000000000
+    Size.Width = 364.000000000000000000
+    Size.Height = 23.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.Trimming = None
+    Text = 'ServiceNameLbl'
+    TabOrder = 3
+  end
+  object ServiceTypeEdt: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    Anchors = [akLeft, akRight, akBottom]
+    TabOrder = 4
+    Text = '_https._tcp.local'
+    Position.X = 8.000000000000000000
+    Position.Y = 474.000000000000000000
+    Size.Width = 364.000000000000000000
+    Size.Height = 32.000000000000000000
+    Size.PlatformDefault = False
+  end
+  object Button2: TButton
+    Anchors = [akRight, akBottom]
+    Position.X = 192.000000000000000000
+    Position.Y = 514.000000000000000000
+    Size.Width = 180.000000000000000000
+    Size.Height = 44.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    Text = 'browse edit types'
+    TextSettings.Trimming = None
+    OnClick = Button2Click
+  end
+end
