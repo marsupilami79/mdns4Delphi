@@ -1,9 +1,9 @@
-object Form1: TForm1
+object FormBrowser: TFormBrowser
   Left = 0
   Top = 0
-  Caption = 'Form1'
+  Caption = 'mDNS Browser'
   ClientHeight = 532
-  ClientWidth = 629
+  ClientWidth = 880
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,37 +20,49 @@ object Form1: TForm1
     Caption = 'ServiceNameLbl'
   end
   object ServicesLV: TListView
-    Left = 10
+    Left = 0
     Top = 40
-    Width = 400
+    Width = 584
     Height = 487
-    Columns = <>
+    Columns = <
+      item
+        Caption = 'Name'
+        MinWidth = 250
+        Width = 350
+      end
+      item
+        Caption = 'IP'
+        MinWidth = 200
+        Width = 200
+      end>
     TabOrder = 0
+    ViewStyle = vsReport
   end
   object Button1: TButton
-    Left = 424
+    Left = 793
     Top = 40
-    Width = 195
-    Height = 55
-    Caption = 'browse all types'
+    Width = 81
+    Height = 32
+    Caption = 'get types'
     TabOrder = 2
     OnClick = Button1Click
   end
-  object ServiceTypeEdt: TEdit
-    Left = 424
-    Top = 168
-    Width = 196
-    Height = 28
-    TabOrder = 3
-    Text = '_https._tcp.local'
-  end
   object Button2: TButton
-    Left = 424
-    Top = 104
+    Left = 592
+    Top = 72
     Width = 195
     Height = 55
-    Caption = 'browse edit types'
+    Caption = 'Browse'
     TabOrder = 1
     OnClick = Button2Click
+  end
+  object ServiceTypeEdt: TComboBox
+    Left = 592
+    Top = 40
+    Width = 196
+    Height = 23
+    Sorted = True
+    TabOrder = 3
+    Text = '_https._tcp.local'
   end
 end

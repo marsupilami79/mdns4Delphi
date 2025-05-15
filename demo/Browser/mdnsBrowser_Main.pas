@@ -11,12 +11,15 @@ uses
   mdnsCore, mdnsResolver;
 
 type
-  TForm1 = class(TForm)
+
+  { TFormBrowser }
+
+  TFormBrowser = class(TForm)
     ServicesLV: TListView;
     Button1: TButton;
     ServiceNameLbl: TLabel;
-    ServiceTypeEdt: TEdit;
     Button2: TButton;
+    ServiceTypeEdt: TComboBox;
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure ServicesLVChangeRepainted(Sender: TObject);
@@ -24,13 +27,14 @@ type
   private
     { Private-Deklarationen }
     FResolver: TMdnsResolver;
-    procedure OnResolved(Sender: TObject; const Result: TmdnsResult);
+    procedure OnResolvedItems(Sender: TObject; const Result: TmdnsResult);
+    procedure OnResolvedCombo(Sender: TObject; const Result: TmdnsResult);
   public
     { Public-Deklarationen }
   end;
 
 var
-  Form1: TForm1;
+  FormBrowser: TFormBrowser;
 
 implementation
 
@@ -70,38 +74,41 @@ end;
 *)
 {------------------------------------------------------------------------------}
 
-procedure TForm1.Button1Click(Sender: TObject);
+procedure TFormBrowser.Button1Click(Sender: TObject);
 begin
   FResolver.StopResolve;
-  ServicesLV.Items.Clear;
+  ServiceTypeEdt.Items.Clear;
   FResolver.ServiceType := '_services._dns-sd._udp.local';
   ServiceNameLbl.Caption := FResolver.ServiceType;
-  //ServicesLV.ItemAppearance.ItemAppearance := 'ListItem';
+  FResolver.OnResolved := OnResolvedCombo;
   FResolver.StartResolve;
 end;
 
-procedure TForm1.Button2Click(Sender: TObject);
+procedure TFormBrowser.Button2Click(Sender: TObject);
 begin
   FResolver.StopResolve;
   ServicesLV.Items.Clear;
-//  ServicesLV.ItemAppearance.ItemAppearance := 'ImageListItemBottomDetail';
   FResolver.ServiceType := ServiceTypeEdt.Text;
   ServiceNameLbl.Caption := ServiceTypeEdt.Text;
+  FResolver.OnResolved := OnResolvedItems;
   FResolver.StartResolve;
 end;
-procedure TForm1.FormCreate(Sender: TObject);
+procedure TFormBrowser.FormCreate(Sender: TObject);
 begin
   FResolver := TMdnsResolver.Create(self);
-  FResolver.OnResolved := OnResolved;
+  FResolver.OnResolved := OnResolvedItems;
 end;
 
-procedure TForm1.OnResolved(Sender: TObject; const Result: TmdnsResult);
+procedure TFormBrowser.OnResolvedItems(Sender: TObject; const Result: TmdnsResult);
 var
   x: Integer;
   Index: Integer;
   Item: TListItem;
+  detail: String;
+
 begin
-  if Result.PTR.NameHost <> '' then begin
+  if Result.PTR.NameHost <> '' then
+  begin
     index := -1;
     for x := 0 to ServicesLV.Items.Count - 1 do begin
       if ServicesLV.Items[x].Caption = Result.PTR.NameHost then begin
@@ -110,20 +117,41 @@ begin
       end
     end;
 
-    if Index = -1 then begin
-      Item := ServicesLV.Items.Add;
-      Item.Caption := Result.PTR.NameHost;
-     (* Item.Detail := Result.Host;
-      if Result.Port <> 0 then
-        Item.Detail := Item.Detail + ':' + IntToStr(Result.Port);
-      Item.TagString := Result.PTR.NameHost;
-      ServicesLV.Items.Sort(TMyListViewItemComparer_AscendingItemText.Create as IComparer<TListViewItem>);
-      *)
+    if Index = -1 then
+    begin
+      Item:= ServicesLV.Items.Add;
+      Item.Caption :=Result.PTR.NameHost;
+
+      detail:= Result.Host;
+      if Result.Port <> 0
+      then detail := detail + ':' + IntToStr(Result.Port);
+
+      Item.SubItems.Add(detail);
     end;
   end;
 end;
 
-procedure TForm1.ServicesLVChangeRepainted(Sender: TObject);
+procedure TFormBrowser.OnResolvedCombo(Sender: TObject; const Result: TmdnsResult);
+var
+  x: Integer;
+  Index: Integer;
+  Item: TListItem;
+begin
+  if Result.PTR.NameHost <> '' then
+  begin
+    index := -1;
+    for x := 0 to ServiceTypeEdt.Items.Count - 1 do
+      if ServiceTypeEdt.Items[x] = Result.PTR.NameHost then
+      begin
+        index := x;
+        break;
+      end;
+
+    if Index = -1 then ServiceTypeEdt.Items.Add(Result.PTR.NameHost);
+  end;
+end;
+
+procedure TFormBrowser.ServicesLVChangeRepainted(Sender: TObject);
 var
   ServiceName: String;
 begin

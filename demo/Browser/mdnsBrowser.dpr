@@ -2,13 +2,13 @@ program mdnsBrowser;
 
 uses
   Vcl.Forms,
-  mdnsBrowser_Main in 'mdnsBrowser_Main.pas' {Form1};
+  mdnsBrowser_Main in 'mdnsBrowser_Main.pas' {FormBrowser};
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TFormBrowser, FormBrowser);
   Application.Run;
 end.

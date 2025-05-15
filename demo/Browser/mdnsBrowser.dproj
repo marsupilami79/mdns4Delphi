@@ -132,7 +132,7 @@
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
         <DCCReference Include="mdnsBrowser_Main.pas">
-            <Form>Form1</Form>
+            <Form>FormBrowser</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Base">
